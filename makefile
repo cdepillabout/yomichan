@@ -5,7 +5,10 @@ all: \
 	core/about_ui.py
 
 clean:
-	git clean -f -x
+	rm core/resources_rc.py
+	rm core/reader_ui.py
+	rm core/preferences_ui.py
+	rm core/about_ui.py
 
 core/resources_rc.py: dev/resources.qrc
 	pyrcc4 $< -o $@
