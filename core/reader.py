@@ -25,6 +25,9 @@ from about import DialogAbout
 from constants import constants
 import reader_util
 
+import eb
+from epywing import epwing 
+
 
 class MainWindowReader(QtGui.QMainWindow, Ui_MainWindowReader):
     class State:
@@ -284,6 +287,25 @@ class MainWindowReader(QtGui.QMainWindow, Ui_MainWindowReader):
             self.preferences.searchResultMax,
             self.preferences.searchGroupByExp
         )
+        for f in definitions:
+            for j in f:
+                print j
+        print definitions
+        print "hello!!!!"
+        eb.eb_initialize_library()
+        my_dict = epwing.EpwingBook('/home/illabout/temp/jp-dicts/JJ - Daijirin')
+        print my_dict.name
+        print my_dict.subbooks[0]["name"]
+        print "bye!!!!"
+
+        #for h, c, s, e, u in my_dict.search('test'):
+        #for e in list(my_dict.search(u"林檎", search_method='exact'))[:5]:
+        for e in list(my_dict.search(text, search_method='exact'))[:5]:
+            definitions.append((e.heading, "", e.text, "", text))
+            #print e.heading
+            #print e.text
+        eb.eb_finalize_library()
+
         self.state.definitions = reader_util.convertDefinitions(definitions)
         self.updateDefinitions()
 
@@ -493,6 +515,14 @@ class MainWindowReader(QtGui.QMainWindow, Ui_MainWindowReader):
 
 
     def updateDefinitions(self):
+        for f in self.state.definitions:
+            print
+            print f.expression
+            print f.reading
+            print f.glossary
+            print f.conjugations
+            print f.source
+            print f.sentence
         html = reader_util.buildDefinitionsHtml(self.state.definitions, self.ankiIsFactValid)
         self.textDefinitions.setHtml(html)
 
